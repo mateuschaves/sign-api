@@ -1,0 +1,25 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.swp
+
+# Django
+*.log
+*.pot
+*.pyc
+*.mo
+*.db
+*.sqlite3
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+*.eggs
+*.coverage
+.coverage.*
+.cache
+*.pyo
+*.pyd
+*.pyo
