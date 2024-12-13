@@ -1,6 +1,6 @@
 from django.db import models
 
-class Compay(models.Model):
+class Company(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=100)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -20,7 +20,7 @@ class Document(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated_at = models.DateTimeField(auto_now=True)
     created_by = models.IntegerField()
-    company_id = models.ForeignKey(Compay, on_delete=models.CASCADE)
+    company_id = models.ForeignKey(Company, on_delete=models.CASCADE)
     external_id = models.CharField(max_length=100)
 
     def __str__(self):
