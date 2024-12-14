@@ -1,16 +1,18 @@
-# Use the official Python image from the Docker Hub
-FROM python:3.13.1-slim
+# Use an official Python runtime as a parent image
+FROM python:3.8
 
-# Set the working directory in the container
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory
 WORKDIR /app
 
-# Copy the requirements file into the container
+# Install dependencies
 COPY requirements.txt /app/
+RUN pip install -r requirements.txt
 
-# Install the dependencies
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy the rest of the application code into the container
+# Copy the project code into the container
 COPY . /app/
 
 # Expose the port the app runs on
