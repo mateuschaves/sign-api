@@ -20,3 +20,14 @@ class CreateSignerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Signer
         fields = ('name', 'email')
+
+
+class UpdateDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ('id', 'status', 'name', 'company')
+
+class UpdateSignerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Signer
+        fields = ('id', 'name', 'email')

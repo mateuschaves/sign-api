@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Company, Document, Signer, SignatureStatus
-from .serializers import CompanySerializer, CreateDocumentSerializer, CreateSignerSerializer, ListDocumentSerializer
+from .serializers import CompanySerializer, CreateDocumentSerializer, CreateSignerSerializer, ListDocumentSerializer, UpdateDocumentSerializer, UpdateSignerSerializer
 from .errors.erros import ErrosMessageEnum
 
 from .repositories.document import DocumentRepository
@@ -123,6 +123,95 @@ def handle_webhook(request):
         return Response({
                     'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
                     'friendly_error_message': 'Ocorreu um erro ao processar o webhook',
+                }, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+@api_view(['DELETE'])
+def delete_document(request, document_id):
+    try:
+        document = DocumentRepository.remove_document(document_id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Document.DoesNotExist:
+        return Response({
+                    'error_code': ErrosMessageEnum.DOCUMENT_NOT_FOUND, 
+                    'friendly_error_message': 'Documento não encontrado'
+                }, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    except Exception as e:
+        return Response({
+                    'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
+                    'friendly_error_message': 'Ocorreu um erro ao deletar o documento',
+                }, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+@api_view(['PATCH'])
+def update_document(request, document_id):
+    try:
+        documentSerializer = UpdateDocumentSerializer(data=request.data)
+        if not documentSerializer.is_valid():
+            return Response(documentSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        document = DocumentRepository.update_document(document_id, documentSerializer.validated_data)
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Document.DoesNotExist:
+        return Response({
+                    'error_code': ErrosMessageEnum.DOCUMENT_NOT_FOUND, 
+                    'friendly_error_message': 'Documento não encontrado'
+                }, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    except Exception as e:
+        return Response({
+                    'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
+                    'friendly_error_message': 'Ocorreu um erro ao atualizar o documento',
+                }, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+@api_view(['DELETE'])
+def delete_signer(request, signer_id):
+    try:
+        signer = SignerRepository.remove_document_signer(signer_id=signer_id)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Signer.DoesNotExist:
+        return Response({
+                    'error_code': ErrosMessageEnum.SIGNER_NOT_FOUND, 
+                    'friendly_error_message': 'Signatário não encontrado'
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+    except Exception as e:
+        return Response({
+                    'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
+                    'friendly_error_message': 'Ocorreu um erro ao deletar o signatário',
+                },
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+@api_view(['PATCH'])
+def update_signer(request, signer_id):
+    try:
+        signerSerializer = UpdateSignerSerializer(data=request.data)
+        if not signerSerializer.is_valid():
+            return Response(signerSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        signer = SignerRepository.update_document_signer(signer_id=signer_id, data=signerSerializer.validated_data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    except Signer.DoesNotExist:
+        return Response({
+                    'error_code': ErrosMessageEnum.SIGNER_NOT_FOUND, 
+                    'friendly_error_message': 'Signatário não encontrado'
+                }, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    except Exception as e:
+        return Response({
+                    'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
+                    'friendly_error_message': 'Ocorreu um erro ao atualizar o signatário',
                 }, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
