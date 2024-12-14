@@ -19,6 +19,10 @@ class SignerRepositoryInterface(ABC):
     def get_signer_from_token(token: str):
         pass
 
+    @abstractmethod
+    def remove_document_signer(signer_id: int):
+        pass
+
 class SignerRepository(SignerRepositoryInterface):
     def get_signers_from_document(document_id: int):
         return Signer.objects.filter(document_id=document_id)
@@ -31,3 +35,13 @@ class SignerRepository(SignerRepositoryInterface):
 
     def get_signer_from_token(token: str):
         return Signer.objects.get(token=token)
+
+    def remove_document_signer(signer_id: int):
+        return Signer.objects.get(id=signer_id).delete()
+
+    def update_document_signer(signer_id: int, data: dict):
+        signer = Signer.objects.get(id=signer_id)
+        for key, value in data.items():
+            setattr(signer, key, value)
+        signer.save()
+        return signer

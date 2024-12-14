@@ -15,6 +15,14 @@ class DocumentRepositoryInterface(ABC):
     def get_document_by_token(token: str):
         pass
 
+    @abstractmethod
+    def remove_document(document_id: int):
+        pass
+
+    @abstractmethod
+    def update_document(document_id: int, data: dict):
+        pass
+
 class DocumentRepository(DocumentRepositoryInterface):
     def get_documents_by_company(company_id: int):
         return Document.objects.filter(company_id=company_id)
@@ -24,3 +32,13 @@ class DocumentRepository(DocumentRepositoryInterface):
 
     def get_document_by_token(token: str):
         return Document.objects.get(token=token)
+
+    def remove_document(document_id: int):
+        return Document.objects.get(id=document_id).delete()
+
+    def update_document(document_id: int, data: dict):
+        document = Document.objects.get(id=document_id)
+        for key, value in data.items():
+            setattr(document, key, value)
+        document.save()
+        return document
