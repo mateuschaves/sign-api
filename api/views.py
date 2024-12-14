@@ -45,7 +45,7 @@ def create_document(request):
 
         company = CompanyRepository.get_company(documentRequest.get('company'))
             
-        signResponse = ZapSignRepository.sign_document_from_url(documentRequest.get('name'), documentRequest.get('url'), signersRequest, 'pt-br')
+        signResponse = ZapSignRepository.sign_document_from_url(name=documentRequest.get('name'), document_url=documentRequest.get('url'), api_token=company.api_token, signers=documentSignersSerializer.validated_data)
         if 'error' in signResponse:
             return Response({
                     'error_code': ErrosMessageEnum.DOCUMENT_NOT_CREATED,
