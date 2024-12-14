@@ -2,6 +2,7 @@ from django.db import models
 
 class SignatureStatus(models.TextChoices):
         SIGNED = 'SIGNED', 'signed'
+        REFUDSED = 'REFUSED', 'refused'
         PENDING = 'PENDING', 'pending'
         NEW = 'NEW', 'new'
         LINK_OPENED = 'LINK_OPENED', 'link_opened'

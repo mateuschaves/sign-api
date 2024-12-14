@@ -11,9 +11,16 @@ class DocumentRepositoryInterface(ABC):
     def create_document(data: dict):
         pass
 
+    @abstractmethod
+    def get_document_by_token(token: str):
+        pass
+
 class DocumentRepository(DocumentRepositoryInterface):
     def get_documents_by_company(company_id: int):
         return Document.objects.filter(company_id=company_id)
 
     def create_document(data: dict):
         return ListDocumentSerializer(Document.objects.create(**data))
+
+    def get_document_by_token(token: str):
+        return Document.objects.get(token=token)
