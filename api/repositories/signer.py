@@ -15,6 +15,10 @@ class SignerRepositoryInterface(ABC):
     def create_many_document_signers(data: list):
         pass
 
+    @abstractmethod
+    def get_signer_from_token(token: str):
+        pass
+
 class SignerRepository(SignerRepositoryInterface):
     def get_signers_from_document(document_id: int):
         return Signer.objects.filter(document_id=document_id)
@@ -24,3 +28,6 @@ class SignerRepository(SignerRepositoryInterface):
 
     def create_many_document_signers(data: list):
         return Signer.objects.bulk_create(data)
+
+    def get_signer_from_token(token: str):
+        return Signer.objects.get(token=token)

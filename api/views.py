@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from .models import Company, Document, Signer
+from .models import Company, Document, Signer, SignatureStatus
 from .serializers import CompanySerializer, CreateDocumentSerializer, CreateSignerSerializer, ListDocumentSerializer
 from .errors.erros import ErrosMessageEnum
 
@@ -93,3 +93,36 @@ def create_document(request):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
         
+@api_view(['POST'])
+def handle_webhook(request):
+    try:
+        event_type = request.data.get('event_type')
+        print(f"""Event type: {event_type} has been received from webhook""")
+        if event_type == 'doc_signed':
+            # update signer status
+            signerToken = request.data.get('signer_who_signed')['token']
+            signer = SignerRepository.get_signer_from_token(signerToken)
+            signer.status = SignatureStatus.SIGNED
+
+            # update document status
+            documentToken = request.data.get('token')
+            document = DocumentRepository.get_document_by_token(documentToken)
+            document.status = request.data.get('status').upper()
+
+            signer.save()
+            document.save()
+        return Response(status=status.HTTP_200_OK)
+    except Document.DoesNotExist:
+        return Response({
+                    'error_code': ErrosMessageEnum.DOCUMENT_NOT_FOUND, 
+                    'friendly_error_message': 'Documento não encontrado'
+                }, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    except Exception as e:
+        return Response({
+                    'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
+                    'friendly_error_message': 'Ocorreu um erro ao processar o webhook',
+                }, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
