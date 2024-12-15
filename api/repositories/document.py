@@ -25,7 +25,7 @@ class DocumentRepositoryInterface(ABC):
 
 class DocumentRepository(DocumentRepositoryInterface):
     def get_documents_by_company(company_id: int):
-        return Document.objects.filter(company_id=company_id)
+        return Document.objects.filter(company_id=company_id).prefetch_related('signers')
 
     def create_document(data: dict):
         return ListDocumentSerializer(Document.objects.create(**data))

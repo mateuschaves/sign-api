@@ -11,15 +11,21 @@ class CreateDocumentSerializer(serializers.ModelSerializer):
         model = Document
         fields = ('name', 'company')
 
-class ListDocumentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Document
-        fields = ('id', 'open_id', 'token', 'name', 'status', 'created_at', 'last_updated_at', 'created_by', 'company', 'external_id')
-
 class CreateSignerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Signer
         fields = ('name', 'email')
+
+class ListSignerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Signer
+        fields = ('id', 'name', 'email', 'status')
+
+class ListDocumentSerializer(serializers.ModelSerializer):
+    signers = ListSignerSerializer(many=True, read_only=True)
+    class Meta:
+        model = Document
+        fields = '__all__'
 
 
 class UpdateDocumentSerializer(serializers.ModelSerializer):
