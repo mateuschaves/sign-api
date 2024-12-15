@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import get_documents, create_document, handle_webhook, update_document, delete_document, update_signer, delete_signer
+from .views import get_documents, create_document, handle_webhook, update_document, delete_document, update_signer, delete_signer, get_companies
 
 urlpatterns = [
     path('documents/<int:company_id>/get', get_documents, name='get_documents'),
@@ -8,5 +8,6 @@ urlpatterns = [
     path('signers/<int:signer_id>/patch', update_signer, name='update_signer'),
     path('signers/<int:signer_id>/delete', delete_signer, name='delete_signer'),
     path('documents/post', create_document, name='create_document'),
+    path('companies', get_companies, name='get_companies'),
     path('webhook/', handle_webhook, name='handle_webhook'),
 ]

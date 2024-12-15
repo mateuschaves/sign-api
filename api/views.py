@@ -27,6 +27,13 @@ def get_documents(request, company_id):
             }, 
             status=status.HTTP_404_NOT_FOUND
         )
+    except Exception as e:
+        return Response({
+                    'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
+                    'friendly_error_message': 'Ocorreu um erro ao buscar os documentos',
+                }, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
 
 @api_view(['POST'])
 def create_document(request):
@@ -215,3 +222,9 @@ def update_signer(request, signer_id):
                 }, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+@api_view(['GET'])
+def get_companies(request):
+    companies = CompanyRepository.get_companies()
+    serializer = CompanySerializer(companies, many=True)
+    return Response(serializer.data)
