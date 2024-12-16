@@ -32,7 +32,7 @@ class Document(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=False)
     last_updated_at = models.DateTimeField(auto_now=True, null=False)
     created_by = models.EmailField(null=False, blank=False)
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, related_name='company')
     external_id = models.CharField(max_length=100, null=True)
 
     def __str__(self):

@@ -14,10 +14,9 @@ from .repositories.zapsign import ZapSignRepository
 from .repositories.signer import SignerRepository
 
 @api_view(['GET'])
-def get_documents(request, company_id):
+def get_documents(request):
     try:
-        CompanyRepository.get_company(company_id)
-        documents = DocumentRepository.get_documents_by_company(company_id)
+        documents = DocumentRepository.get_documents()
         serializer = ListDocumentSerializer(documents, many=True)
         return Response(serializer.data)
     except Company.DoesNotExist:
