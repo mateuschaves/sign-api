@@ -49,7 +49,6 @@ def get_document(request, document_id):
                 status=status.HTTP_404_NOT_FOUND
             )
     except Exception as e:
-        print(e)
         return Response({
                     'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
                     'friendly_error_message': 'Ocorreu um erro ao buscar o documento',
@@ -218,30 +217,6 @@ def delete_signer(request, signer_id):
                     'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
                     'friendly_error_message': 'Ocorreu um erro ao deletar o signatário',
                 },
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR
-            )
-
-@api_view(['PATCH'])
-def update_signer(request, signer_id):
-    try:
-        signerSerializer = UpdateSignerSerializer(data=request.data)
-        if not signerSerializer.is_valid():
-            return Response(signerSerializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        signer = SignerRepository.update_document_signer(signer_id=signer_id, data=signerSerializer.validated_data)
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    except Signer.DoesNotExist:
-        return Response({
-                    'error_code': ErrosMessageEnum.SIGNER_NOT_FOUND, 
-                    'friendly_error_message': 'Signatário não encontrado'
-                }, 
-                status=status.HTTP_404_NOT_FOUND
-            )
-    except Exception as e:
-        return Response({
-                    'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
-                    'friendly_error_message': 'Ocorreu um erro ao atualizar o signatário',
-                }, 
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 

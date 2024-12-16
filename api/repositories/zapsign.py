@@ -13,9 +13,12 @@ class ZapSignRepository:
                 "Authorization": f"Bearer {api_token}",
                 "Content-Type": "application/json"
             }
+            
+            valid_signers = [signer for signer in signers if signer.get('email') and signer.get('name')]
+
             payload = {
                 "url_pdf": document_url,
-                "signers": signers,
+                "signers": valid_signers,
                 "name": name,
                 "lang": "pt-br"
             }
