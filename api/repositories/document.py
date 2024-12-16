@@ -48,4 +48,4 @@ class DocumentRepository(DocumentRepositoryInterface):
         return document
 
     def get_documents():
-        return Document.objects.all().prefetch_related('signers').prefetch_related('company')
+        return Document.objects.all().prefetch_related('signers').prefetch_related('company').order_by('created_at')
