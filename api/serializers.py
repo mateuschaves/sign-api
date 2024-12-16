@@ -4,7 +4,7 @@ from .models import Company, Document, Signer
 class CompanySerializer(serializers.ModelSerializer):
     class Meta:
         model = Company
-        fields = ('__all__')
+        fields = ('id', 'name', 'created_at', 'last_updated_at')
 
 class CreateDocumentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -23,6 +23,7 @@ class ListSignerSerializer(serializers.ModelSerializer):
 
 class ListDocumentSerializer(serializers.ModelSerializer):
     signers = ListSignerSerializer(many=True, read_only=True)
+    company = CompanySerializer(read_only=True)
     class Meta:
         model = Document
         fields = '__all__'

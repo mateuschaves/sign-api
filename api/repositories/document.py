@@ -23,6 +23,10 @@ class DocumentRepositoryInterface(ABC):
     def update_document(document_id: int, data: dict):
         pass
 
+    @abstractmethod
+    def get_documents():
+        pass
+
 class DocumentRepository(DocumentRepositoryInterface):
     def get_documents_by_company(company_id: int):
         return Document.objects.filter(company_id=company_id).prefetch_related('signers')
@@ -42,3 +46,6 @@ class DocumentRepository(DocumentRepositoryInterface):
             setattr(document, key, value)
         document.save()
         return document
+
+    def get_documents():
+        return Document.objects.all().prefetch_related('signers').prefetch_related('company')
