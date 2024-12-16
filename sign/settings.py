@@ -139,4 +139,5 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
     "http://sign.onrender.com",
     "https://sign.onrender.com",
+    "https://sign-frontend-b8il.onrender.com"
 ]
