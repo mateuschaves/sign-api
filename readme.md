@@ -1,6 +1,8 @@
 # Sign API
 
-This is a Django project for the Sign API.
+A simple CRUD application for managing documents, featuring integration with the ZapSign API for seamless electronic signature functionality
+
+![Sign API](doc/arb.png)
 
 ## Requirements
 
