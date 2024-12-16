@@ -34,6 +34,29 @@ def get_documents(request):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
 
+
+@api_view(['GET'])
+def get_document(request, document_id):
+    try:
+        document = DocumentRepository.get_document_by_id(document_id)
+        serializer = ListDocumentSerializer(document)
+        return Response(serializer.data)
+    except Document.DoesNotExist:
+        return Response({
+                    'error_code': ErrosMessageEnum.DOCUMENT_NOT_FOUND, 
+                    'friendly_error_message': 'Documento não encontrado'
+                }, 
+                status=status.HTTP_404_NOT_FOUND
+            )
+    except Exception as e:
+        print(e)
+        return Response({
+                    'error_code': ErrosMessageEnum.INTERNAL_SERVER_ERROR, 
+                    'friendly_error_message': 'Ocorreu um erro ao buscar o documento',
+                }, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
 @api_view(['POST'])
 def create_document(request):
     try:
